@@ -72,7 +72,16 @@ choices.forEach((choice) => {
     acceptingAnswers = false; // creates delay
     const selectedChoice = e.target; // reference to clicked answer
     const selectedAnswer = selectedChoice.dataset["number"]; // reference to clicked answer, based on data-number property
-    getNewQuestion();
+
+    const classToApply =
+      selectedAnswer == currentQuestion.answer ? "correct" : "incorrect"; // checks if the answer is correct or incorrect
+
+    selectedChoice.parentElement.classList.add(classToApply); // adds the "correct" or "incorrect" class to the selected choice container
+
+    setTimeout(() => {
+      selectedChoice.parentElement.classList.remove(classToApply);
+      getNewQuestion();
+    }, 1000); // removes the "correct" or "incorrect" class and serves a new question after a delay
   });
 });
 
