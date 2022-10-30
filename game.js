@@ -1,5 +1,7 @@
 const question = document.getElementById("question"); // reference to question
 const choices = Array.from(document.getElementsByClassName("choice-text")); // reference to choices, converted into an array
+const questionCounterText = document.getElementById("question-counter");
+const scoreText = document.getElementById("score");
 
 let currentQuestion = {};
 let acceptingAnswers = false; // start as false, to create a slight delay before the user can answer
@@ -52,6 +54,8 @@ getNewQuestion = () => {
   } // send to end.html page if there are no questions left to display to the user and the game is over
 
   questionCounter++; // starting the game increments it to 1
+  questionCounterText.innerText = `${questionCounter}/${MAX_QUESTIONS}`; // updates question number dynamically using the question counter
+
   const questionIndex = Math.floor(Math.random() * availableQuestions.length); // chooses a random question from the available options left to the user
   currentQuestion = availableQuestions[questionIndex]; // gets a reference to the current question
   question.innerText = currentQuestion.question; // updates the question text to the current question
@@ -76,6 +80,10 @@ choices.forEach((choice) => {
     const classToApply =
       selectedAnswer == currentQuestion.answer ? "correct" : "incorrect"; // checks if the answer is correct or incorrect
 
+    if (classToApply === "correct") {
+      incrementScore(CORRECT_BONUS);
+    } // if the answer is correct, the increment function is called and 10 points are added to the score
+
     selectedChoice.parentElement.classList.add(classToApply); // adds the "correct" or "incorrect" class to the selected choice container
 
     setTimeout(() => {
@@ -84,5 +92,10 @@ choices.forEach((choice) => {
     }, 1000); // removes the "correct" or "incorrect" class and serves a new question after a delay
   });
 });
+
+incrementScore = (num) => {
+  score += num;
+  scoreText.innerText = score;
+}; // increments the score and updates the score text with the new score
 
 startGame();
