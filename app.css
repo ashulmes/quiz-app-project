@@ -50,6 +50,7 @@ h3 {
   align-items: center;
   max-width: 80rem; /* 80 x 10px */
   margin: 0 auto;
+  padding: 2rem;
 }
 
 .container > * {
