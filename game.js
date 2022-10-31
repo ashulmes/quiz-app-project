@@ -1,7 +1,8 @@
 const question = document.getElementById("question"); // reference to question
 const choices = Array.from(document.getElementsByClassName("choice-text")); // reference to choices, converted into an array
-const questionCounterText = document.getElementById("question-counter");
+const progressText = document.getElementById("progress-text");
 const scoreText = document.getElementById("score");
+const progressBarFull = document.getElementById("progress-bar-full");
 
 let currentQuestion = {};
 let acceptingAnswers = false; // start as false, to create a slight delay before the user can answer
@@ -54,7 +55,8 @@ getNewQuestion = () => {
   } // send to end.html page if there are no questions left to display to the user and the game is over
 
   questionCounter++; // starting the game increments it to 1
-  questionCounterText.innerText = `${questionCounter}/${MAX_QUESTIONS}`; // updates question number dynamically using the question counter
+  progressText.innerText = `Question ${questionCounter}/${MAX_QUESTIONS}`; // updates question number dynamically using the question counter
+  progressBarFull.style.width = `${(questionCounter / MAX_QUESTIONS) * 100}%`; // sets width of progress bar dynamically, depending on the question number
 
   const questionIndex = Math.floor(Math.random() * availableQuestions.length); // chooses a random question from the available options left to the user
   currentQuestion = availableQuestions[questionIndex]; // gets a reference to the current question
