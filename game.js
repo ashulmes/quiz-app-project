@@ -30,10 +30,10 @@ let questions = [
   },
   {
     question: "How do you write 'Hello World' in an alert box?",
-    choice1: "msgBox('Hello World);",
-    choice2: "alertBox('Hello World);",
-    choice3: "msg('Hello World);",
-    choice4: "alert('Hello World);",
+    choice1: "msgBox('Hello World');",
+    choice2: "alertBox('Hello World');",
+    choice3: "msg('Hello World');",
+    choice4: "alert('Hello World');",
     answer: 4,
   },
 ];
@@ -51,8 +51,9 @@ startGame = () => {
 
 getNewQuestion = () => {
   if (availableQuestions.length === 0 || questionCounter >= MAX_QUESTIONS) {
-    return window.location.assign("/end.html");
-  } // send to end.html page if there are no questions left to display to the user and the game is over
+    localStorage.setItem("mostRecentScore", score); // saves the most recent score to the local storage, which can be accessed through the "Application" tab in Chrome
+    return window.location.assign("/end.html"); // send to end.html page if there are no questions left to display to the user and the game is over
+  }
 
   questionCounter++; // starting the game increments it to 1
   progressText.innerText = `Question ${questionCounter}/${MAX_QUESTIONS}`; // updates question number dynamically using the question counter
