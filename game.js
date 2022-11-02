@@ -51,7 +51,7 @@ startGame = () => {
 
 getNewQuestion = () => {
   if (availableQuestions.length === 0 || questionCounter >= MAX_QUESTIONS) {
-    localStorage.setItem("mostRecentScore", score); // saves the most recent score to the local storage, which can be accessed through the "Application" tab in Chrome
+    localStorage.setItem("mostRecentScore", score); // saves the most recent score to local storage, which uses key value pairs where the value is a string
     return window.location.assign("/end.html"); // send to end.html page if there are no questions left to display to the user and the game is over
   }
 
