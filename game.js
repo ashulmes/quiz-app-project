@@ -15,23 +15,24 @@ let availableQuestions = [];
 let questions = [];
 
 fetch(
-  "https://opentdb.com/api.php?amount=10&category=11&difficulty=easy&type=multiple"
-) // returns a promise from the "Open Trivia DB"
+  "https://the-trivia-api.com/api/questions?categories=film_and_tv&limit=10&difficulty=medium"
+) // returns a promise from the trivia API
   .then((res) => {
     return res.json(); // converts the http response body into a json
   })
   .then((loadedQuestions) => {
-    questions = loadedQuestions.results.map((loadedQuestion) => {
+    console.log(loadedQuestions);
+    questions = loadedQuestions.map((loadedQuestion) => {
       const formattedQuestion = {
         question: loadedQuestion.question,
       }; // iterates through the questions array and returns a new array of objects in the format we need
 
-      const answerChoices = [...loadedQuestion.incorrect_answers]; // provides an array of the incorrect answers
+      const answerChoices = [...loadedQuestion.incorrectAnswers]; // provides an array of the incorrect answers
       formattedQuestion.answer = Math.floor(Math.random() * 3) + 1; // gives the selected answer a random index/position between 0 - 3
       answerChoices.splice(
         formattedQuestion.answer - 1,
         0,
-        loadedQuestion.correct_answer
+        loadedQuestion.correctAnswer
       ); // adds the selected answer to the incorrect answers and correct answer array, in random positions
 
       answerChoices.forEach((choice, index) => {
@@ -50,7 +51,7 @@ fetch(
 
 // CONSTANTS
 const CORRECT_BONUS = 10; // points for a correct answer
-const MAX_QUESTIONS = 3; // number of questions a user gets before the game ends
+const MAX_QUESTIONS = 10; // number of questions a user gets before the game ends
 
 startGame = () => {
   questionCounter = 0; // reset
