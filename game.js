@@ -3,6 +3,8 @@ const choices = Array.from(document.getElementsByClassName("choice-text")); // r
 const progressText = document.getElementById("progress-text");
 const scoreText = document.getElementById("score");
 const progressBarFull = document.getElementById("progress-bar-full");
+const loader = document.getElementById("loader");
+const game = document.getElementById("game");
 
 let currentQuestion = {};
 let acceptingAnswers = false; // start as false, to create a slight delay before the user can answer
@@ -10,33 +12,41 @@ let score = 0;
 let questionCounter = 0;
 let availableQuestions = [];
 
-let questions = [
-  {
-    question: "Inside which HTML element do we put the JavaScript?",
-    choice1: "<script>",
-    choice2: "<javascript>",
-    choice3: "<js>",
-    choice4: "<scripting>",
-    answer: 1,
-  },
-  {
-    question:
-      "What is the correct system for referring to an external script called 'xxx.js'?",
-    choice1: "<script href='xxx.js'>",
-    choice2: "<script name='xxx.js'>",
-    choice3: "<script src='xxx.js'>",
-    choice4: "<script file='xxx.js'>",
-    answer: 3,
-  },
-  {
-    question: "How do you write 'Hello World' in an alert box?",
-    choice1: "msgBox('Hello World');",
-    choice2: "alertBox('Hello World');",
-    choice3: "msg('Hello World');",
-    choice4: "alert('Hello World');",
-    answer: 4,
-  },
-];
+let questions = [];
+
+fetch(
+  "https://opentdb.com/api.php?amount=10&category=11&difficulty=easy&type=multiple"
+) // returns a promise from the "Open Trivia DB"
+  .then((res) => {
+    return res.json(); // converts the http response body into a json
+  })
+  .then((loadedQuestions) => {
+    questions = loadedQuestions.results.map((loadedQuestion) => {
+      const formattedQuestion = {
+        question: loadedQuestion.question,
+      }; // iterates through the questions array and returns a new array of objects in the format we need
+
+      const answerChoices = [...loadedQuestion.incorrect_answers]; // provides an array of the incorrect answers
+      formattedQuestion.answer = Math.floor(Math.random() * 3) + 1; // gives the selected answer a random index/position between 0 - 3
+      answerChoices.splice(
+        formattedQuestion.answer - 1,
+        0,
+        loadedQuestion.correct_answer
+      ); // adds the selected answer to the incorrect answers and correct answer array, in random positions
+
+      answerChoices.forEach((choice, index) => {
+        formattedQuestion["choice" + (index + 1)] = choice;
+      }); // iterate through all the answer choices, set the choice property and assign an index
+
+      return formattedQuestion;
+    });
+
+    startGame(); // game now starts once the questions are loaded
+  })
+  .catch((err) => {
+    // when a promise is returned, the catch/error scenario should always be handled
+    console.error(err); // logs errors to the console
+  });
 
 // CONSTANTS
 const CORRECT_BONUS = 10; // points for a correct answer
@@ -47,6 +57,8 @@ startGame = () => {
   score = 0; // reset
   availableQuestions = [...questions]; // creates a copy as a new array that can be manipulated, without changing the original array
   getNewQuestion();
+  game.classList.remove("hidden"); // when the first question is loaded, the game displays
+  loader.classList.add("hidden"); // when the first question is loaded, the loader is hidden
 };
 
 getNewQuestion = () => {
@@ -100,5 +112,3 @@ incrementScore = (num) => {
   score += num;
   scoreText.innerText = score;
 }; // increments the score and updates the score text with the new score
-
-startGame();
